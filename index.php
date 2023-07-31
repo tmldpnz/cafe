@@ -82,15 +82,7 @@ body, html {
 </div>
 
 <?php
-include "config.php"; //load in any variables
-$db_connection = mysqli_connect(HOST, DBUSER, DBPASSWORD, DBDATABASE);
-
-//insert DB code from here onwards
-//check if the connection was good
-if (mysqli_connect_errno()) {
-    echo "Error: Unable to connect to MySQL. ".mysqli_connect_error() ;
-    exit; //stop processing the page further
-}
+include "dbconnect.php";
 
 //prepare a query and send it to the server
 $query = 'SELECT menuid,category,name,description, price FROM menu WHERE category="eat"';
@@ -101,9 +93,7 @@ $rowcount = mysqli_num_rows($result);
 <!-- Menu Container -->
 <div class="w3-container" id="menu">
   <div class="w3-content" style="max-width:700px">
- 
     <h5 class="w3-center w3-padding-48"><span class="w3-tag w3-wide">THE MENU</span></h5>
-  
     <div class="w3-row w3-center w3-card w3-padding">
       <a href="javascript:void(0)" onclick="openMenu(event, 'Eat');" id="myLink">
         <div class="w3-col s6 tablink">Eat</div>
@@ -112,20 +102,15 @@ $rowcount = mysqli_num_rows($result);
         <div class="w3-col s6 tablink">Drink</div>
       </a>
     </div>
-
-
-
-
     <div id="Eat" class="w3-container menu w3-padding-48 w3-card">
 	<?php
-	if ($rowcount > 0) {  
-    while ($row = mysqli_fetch_assoc($result)) {	
-	  echo '<h5>'.$row['name'].'</h5>';
-
-?>
-      <p class="w3-text-grey"><?php echo $row['description'].' '.$row['price']; ?></p><br>
-	<?php
-		}
+	  if ($rowcount > 0)
+    {  
+      while ($row = mysqli_fetch_assoc($result))
+      {	
+	      echo '<h5>'.$row['name'].'</h5>';
+        echo "<p class='w3-text-grey'>".$row['description'].' '.$row['price']."</p><br>";
+		  }
 	}
 	?>
     </div>
@@ -175,8 +160,8 @@ mysqli_close($db_connection); //close the connection once done
       <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name" required name="name"></p>
       <p><input class="w3-input w3-padding-16 w3-border" type="number" placeholder="How many people" required name="people"></p>
       <p><input class="w3-input w3-padding-16 w3-border" type="datetime-local" placeholder="Date and time" required name="dateandtime"></p>
-      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message / Special requirements" name="comment"></p>
-      <p><input class="w3-button w3-black" type="submit" value="SEND REQUEST"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message / Special requirements" name="message"></p>
+      <p><input class="w3-button w3-black" type="submit" name="submit" value="SEND REQUEST"></p>
     </form>
   </div>
 </div>
